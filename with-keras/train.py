@@ -6,12 +6,14 @@
 # The neural network in question is inspired by the one in "Run your Keras
 # models in C++ Tensorflow"
 # (http://www.bitbionic.com/2017/08/18/run-your-keras-models-in-c-tensorflow/)
+# with a few changes for illustrative reasons and to reduce the size of the
+# trained model in version control.
 #
 # I used the same flowers dataset as referred to in that article
 # (http://download.tensorflow.org/example_images/flower_photos.tgz).  I divided
-# it into 3/4 training and 1/4 test data, scaled images to a maximum of 128x128
-# using ImageMagick convert, and put the training set in
-# ../data/train/{daisy,dandelion,roses,sunflowers,tulips}.  That path is
+# it into training, validation, and test sets, scaled images to a maximum of
+# 128x128 using ImageMagick convert, and put the training set in
+# ../data/train/{daisy,dandelion,roses,sunflowers,tulips}. That location is
 # hardcoded in this script.
 
 import numpy as np
