@@ -1,0 +1,8 @@
+syntax: glob
+*~
+*.o
+flower
+with-tiny-dnn/with-tiny-dnn
+data/
+flower_photos*
+my-weights*
