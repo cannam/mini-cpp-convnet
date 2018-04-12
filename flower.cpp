@@ -4,6 +4,7 @@
 #include <map>
 #include <stdexcept>
 #include <iostream>
+#include <chrono>
 
 #include <cstdlib>
 #include <cstring>
@@ -397,7 +398,15 @@ int main(int argc, char **argv)
         throw runtime_error("Image has wrong size");
     }
 
+    auto before = chrono::high_resolution_clock::now();
+    
     auto result = classify(image);
+
+    auto after = chrono::high_resolution_clock::now();
+
+    chrono::duration<double> diff = after - before;
+    
+    cerr << "Classification took " << diff.count() << " sec" << endl;
 
     vector<string> labels {
         "daisy", "dandelion", "roses", "sunflowers", "tulips"

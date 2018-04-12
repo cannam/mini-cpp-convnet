@@ -6,6 +6,7 @@
 #include <vector>
 #include <map>
 #include <iostream>
+#include <chrono>
 
 #include <png.h>
 
@@ -23,12 +24,7 @@
 // trained and saved the model using tiny-dnn in the first place.
 
 using namespace tiny_dnn;
-using std::vector;
-using std::map;
-using std::cout;
-using std::cerr;
-using std::endl;
-using std::string;
+using namespace std;
 
 vector<float>
 read_image(string filename)
@@ -38,7 +34,7 @@ read_image(string filename)
     image.version = PNG_IMAGE_VERSION;
 
     if (!png_image_begin_read_from_file(&image, filename.c_str())) {
-        throw std::runtime_error
+        throw runtime_error
             (string("Failed to open image file: ") + image.message);
     }
 
@@ -47,7 +43,7 @@ read_image(string filename)
     vector<png_byte> buffer(size, 255);
     
     if (!png_image_finish_read(&image, nullptr, buffer.data(), 0, nullptr)) {
-        throw std::runtime_error
+        throw runtime_error
             (string("Failed to read image file: ") + image.message);
     }
 
@@ -171,7 +167,7 @@ int main(int argc, char **argv)
     if (image.size() != expected_height * expected_width * 3) {
         cerr << "Image has wrong size: must be exactly " << expected_width
              << "x" << expected_height << " pixels" << endl;
-        throw std::runtime_error("Image has wrong size");
+        throw runtime_error("Image has wrong size");
     }
 
     network<sequential> model;
@@ -219,7 +215,16 @@ int main(int argc, char **argv)
                content_type::weights_and_model,
                file_format::json);
 */    
+
+    auto before = chrono::high_resolution_clock::now();
+    
     auto result = model.predict(image);
+
+    auto after = chrono::high_resolution_clock::now();
+
+    chrono::duration<double> diff = after - before;
+    
+    cerr << "Classification took " << diff.count() << " sec" << endl;
     
     vector<string> labels {
         "daisy", "dandelion", "roses", "sunflowers", "tulips"
@@ -229,7 +234,7 @@ int main(int argc, char **argv)
     
     for (size_t i = 0; i < result.size(); ++i) {
         if (i >= labels.size()) {
-            throw std::logic_error("Too many result categories!");
+            throw logic_error("Too many result categories!");
         }
         ranking[- result[i] * 100.0] = labels[i];
     }
