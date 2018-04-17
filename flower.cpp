@@ -85,29 +85,6 @@ convolve(const vector<vector<vector<float>>> &in,
 }
 
 vector<vector<vector<float>>>
-convolutionActivation(const vector<vector<vector<float>>> &in,
-                      string type)
-{
-    auto out(in);
-
-    if (type == "relu") {
-        for (size_t i = 0; i < out.size(); ++i) {
-            for (size_t j = 0; j < out[i].size(); ++j) {
-                for (size_t k = 0; k < out[i][j].size(); ++k) {
-                    if (out[i][j][k] < 0.f) {
-                        out[i][j][k] = 0.f;
-                    }
-                }
-            }
-        }
-    } else {
-        throw runtime_error("Unknown activation function '" + type + "'");
-    }
-        
-    return out;
-}
-
-vector<vector<vector<float>>>
 maxPool(const vector<vector<vector<float>>> &in,
         size_t pool_y,
         size_t pool_x)
@@ -274,9 +251,42 @@ dense(const vector<float> &in,
     return out;
 }
 
+// "activation" is an overloaded function name, as our representation
+// of tensors awkwardly means we can't straightforwardly operate on
+// both rank-1 and rank-3 tensors in the same function. This version
+// is for rank-3 tensors as returned from convolution layers
+//
+vector<vector<vector<float>>>
+activation(const vector<vector<vector<float>>> &in,
+           string type)
+{
+    auto out(in);
+
+    if (type == "relu") {
+        for (size_t i = 0; i < out.size(); ++i) {
+            for (size_t j = 0; j < out[i].size(); ++j) {
+                for (size_t k = 0; k < out[i][j].size(); ++k) {
+                    if (out[i][j][k] < 0.f) {
+                        out[i][j][k] = 0.f;
+                    }
+                }
+            }
+        }
+    } else {
+        throw runtime_error("Unknown activation function '" + type + "'");
+    }
+        
+    return out;
+}
+
+// "activation" is an overloaded function name, as our representation
+// of tensors awkwardly means we can't straightforwardly operate on
+// both rank-1 and rank-3 tensors in the same function. This version
+// is for rank-1 tensors as returned from dense layers
+//
 vector<float>
-denseActivation(const vector<float> &in,
-                string type)
+activation(const vector<float> &in,
+           string type)
 {
     auto out(in);
     size_t sz = out.size();
@@ -310,31 +320,31 @@ classify(const vector<vector<vector<float>>> &image)
 
     t = zeroPad(image, 1, 1);
     t = convolve(t, weights_firstConv, biases_firstConv);
-    t = convolutionActivation(t, "relu");
+    t = activation(t, "relu");
     t = maxPool(t, 2, 2);
 
     t = zeroPad(t, 1, 1);
     t = convolve(t, weights_secondConv, biases_secondConv);
-    t = convolutionActivation(t, "relu");
+    t = activation(t, "relu");
     t = maxPool(t, 2, 2);
 
     t = zeroPad(t, 1, 1);
     t = convolve(t, weights_thirdConv, biases_thirdConv);
-    t = convolutionActivation(t, "relu");
+    t = activation(t, "relu");
     t = maxPool(t, 2, 2);
 
     t = zeroPad(t, 1, 1);
     t = convolve(t, weights_fourthConv, biases_fourthConv);
-    t = convolutionActivation(t, "relu");
+    t = activation(t, "relu");
     t = maxPool(t, 2, 2);
 
     vector<float> flat = flatten(t);
     
     flat = dense(flat, weights_firstDense, biases_firstDense);
-    flat = denseActivation(flat, "relu");
+    flat = activation(flat, "relu");
 
     flat = dense(flat, weights_labeller, biases_labeller);
-    flat = denseActivation(flat, "softmax");
+    flat = activation(flat, "softmax");
 
     return flat;
 }
