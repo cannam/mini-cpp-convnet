@@ -29,11 +29,16 @@ else
     ( cd flower_photos
       for infile in */[0-9]*.jpg ; do
           echo -n "."
-          group=$(case "$infile" in
-                      */[0-5]*) echo train;;
-                      */[6-7]*) echo validate;;
-                      */[8-9]*) echo test;;
-                  esac)
+          group=""
+	  case "$infile" in
+              */[0-5]*) group=train;;
+              */[6-7]*) group=validate;;
+              */[8-9]*) group=test;;
+          esac
+	  if [ -z "$group" ]; then
+	      echo "*** ERROR: Unexpected filename \"$infile\""
+	      exit 2
+	  fi
           category=${infile%%/*}
           base=$(basename "$infile" .jpg)
           mkdir -p "../data/$group/$category"
