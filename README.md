@@ -1,4 +1,6 @@
 
+### mini-cpp-convnet
+
 A small program to run (but not train) a convolutional network for
 image classification, to accompany the article [What does a
 convolutional neural net actually do when you run
