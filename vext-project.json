@@ -1,0 +1,13 @@
+{
+    "config": {
+        "extdir": "ext"
+    },
+    "libraries": {
+        "tiny-dnn": {
+            "vcs": "git",
+            "service": "github",
+            "owner": "tiny-dnn"
+        }
+    }
+}
+

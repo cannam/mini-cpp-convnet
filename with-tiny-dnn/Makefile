@@ -1,5 +1,5 @@
 
-CXXFLAGS	:= -std=c++14 -O3 -Wall -Wextra -Wno-unused-parameter -I../../tiny-dnn
+CXXFLAGS	:= -std=c++14 -O3 -Wall -Wextra -Wno-unused-parameter -I../ext/tiny-dnn
 
 LDFLAGS		:= -lpng -lpthread
 

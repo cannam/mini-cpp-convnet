@@ -1,9 +1,17 @@
 #!/bin/bash
 
-set -eu
+set -e
 
 mydir=$(dirname "$0")
 cd "$mydir"
+
+program_under_test=flower
+
+if [ -n "$1" ]; then
+    program_under_test="$1"
+fi    
+
+set -u
 
 total=0
 good=0
@@ -11,10 +19,7 @@ bad=0
 
 test_dir=data/test
 
-program_under_test=flower
-#program_under_test=my-flower
-#program_under_test=with-tiny-dnn/with-tiny-dnn
-#program_under_test=with-keras/test.py
+echo "Evaluating $program_under_test..."
 
 for infile in $test_dir/*/*.png ; do
     actual=${infile##$test_dir/}

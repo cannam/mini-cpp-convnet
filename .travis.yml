@@ -1,0 +1,24 @@
+language:
+  - cpp
+
+matrix:
+  include:
+    - os: linux
+      dist: trusty
+      sudo: false
+
+addons:
+  apt:
+    packages:
+     - imagemagick mlton wget
+
+before_script:
+  - ./vext install
+  - ./obtain-data.sh
+
+script:
+  - make
+  - ( cd with-tiny-dnn ; make )
+  - ./evaluate.sh
+  - ./evaluate.sh with-tiny-dnn/with-tiny-dnn
+

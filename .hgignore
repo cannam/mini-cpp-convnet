@@ -6,3 +6,5 @@ with-tiny-dnn/with-tiny-dnn
 data/
 flower_photos*
 my-weights*
+glob:.vext-*.bin
+ext/

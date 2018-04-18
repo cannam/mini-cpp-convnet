@@ -1,0 +1,7 @@
+{
+  "libraries": {
+    "tiny-dnn": {
+      "pin": "1c5259477b8b4eab376cc19fd1d55ae965ef5e5a"
+    }
+  }
+}
