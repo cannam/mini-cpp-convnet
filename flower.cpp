@@ -303,8 +303,10 @@ activation(const vector<float> &in,
             out[i] = exp(out[i]);
             sum += out[i];
         }
-        for (size_t i = 0; i < sz; ++i) {
-            out[i] /= sum;
+        if (sum != 0.f) {
+            for (size_t i = 0; i < sz; ++i) {
+                out[i] /= sum;
+            }
         }
     } else {
         throw runtime_error("Unknown activation function '" + type + "'");
