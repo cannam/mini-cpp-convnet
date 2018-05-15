@@ -10,7 +10,7 @@ before_install:
   - if [[ "$TRAVIS_OS_NAME" = "osx" ]] ; then brew install polyml imagemagick ; fi
 
 before_script:
-  - ./vext install
+  - ./repoint install
   - ./obtain-data.sh
 
 script:
