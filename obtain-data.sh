@@ -21,7 +21,7 @@ else
         tar xvf flower_photos.tgz
     fi
     echo "*** Converting and scaling datasets..."
-    if ! ( convert --help 2>/dev/null | grep -q ImageMagick ) ; then
+    if ! ( magick --help 2>/dev/null | grep -q ImageMagick ) ; then
         echo "*** ERROR: ImageMagick \"convert\" utility required"
         exit 2
     fi
@@ -42,7 +42,7 @@ else
           category=${infile%%/*}
           base=$(basename "$infile" .jpg)
           mkdir -p "../data/$group/$category"
-          convert "$infile" -resize 128x128 -gravity center -extent 128x128 "../data/$group/$category/$base.png"
+          magick "$infile" -strip -resize 128x128 -gravity center -extent 128x128 "../data/$group/$category/$base.png"
       done
     )
     echo
